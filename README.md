@@ -86,6 +86,33 @@ env[PATH] = /usr/local/bin:/usr/bin:/bin
 
 This will instruct PHP FPM to look for the `gs` binary in the right places.
 
+## Issue regarding ImageMagick
+When converting a pdf to png or jpg you may run into this issue:
+
+`Maximum execution time of 30 seconds exceeded or 502 Bad Gateway`
+
+This is likely caused by a permissions issue in the policy.xml file. You may find the policy.xml file by running this command:
+
+```
+identify -list policy
+```
+
+Please be sure to change your rights on this line: 
+```
+// from
+// <policy domain="coder" rights="none" pattern="PDF" />
+
+// to
+<policy domain="coder" rights="read | write" pattern="PDF" />
+```
+
+You may also consider modifying your php.ini file:
+```
+// extend the default time as required by your application
+max_execution_time = 120
+max_input_time = 60
+```
+
 ## Testing
 
 ``` bash
